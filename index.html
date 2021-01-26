@@ -6,27 +6,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Static Template</title>
     <link rel="stylesheet" href="/assets/css/styles.css" />
-    <script src="https://unpkg.com/foxmoon-compiler@0.0.4/lib/index.min.js"></script>
+    <script src="https://unpkg.com/foxmoon-compiler@0.0.5/lib/index.min.js"></script>
+    <script src="/assets/js/app.js"></script>
   </head>
   <body>
-    <h1>Foxmoon Compiler Playground</h1>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const yaml = `
-kind: component
-name: hello
-spec:
-  props:
-    - name
-  render:
-    layout: flex-column
-    elements:
-      - type: static-text
-        value: hello
-      - type: prop
-        value: name`;
-        compiler.Lexer.yamlLexer(yaml).then(console.log).catch(console.log);
-      });
-    </script>
+    <h1 class="title">Compiler Playground</h1>
+    <div class="codebox">
+      <div class="code">
+        <div class="code-box-title">CONFIG</div>
+        <textarea id="yaml" class="code-input"></textarea>
+      </div>
+      <div class="code">
+        <div class="code-box-title">PARSER</div>
+        <textarea id="parser" class="code-input" disabled></textarea>
+      </div>
+      <div class="code">
+        <div class="code-box-title">TRANSFORMER</div>
+        <textarea id="transformer" class="code-input" disabled></textarea>
+      </div>
+      <div class="code">
+        <div class="code-box-title">REACT CODE</div>
+        <textarea id="codeGenerator" class="code-input" disabled></textarea>
+      </div>
+    </div>
   </body>
 </html>
