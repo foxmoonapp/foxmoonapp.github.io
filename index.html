@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script src="https://unpkg.com/foxmoon-compiler@0.0.4/lib/index.min.js"></script>
+  </head>
+  <body>
+    <h1>Foxmoon Compiler Playground</h1>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const yaml = `
+kind: component
+name: hello
+spec:
+  props:
+    - name
+  render:
+    layout: flex-column
+    elements:
+      - type: static-text
+        value: hello
+      - type: prop
+        value: name`;
+        compiler.Lexer.yamlLexer(yaml).then(console.log).catch(console.log);
+      });
+    </script>
+  </body>
+</html>
