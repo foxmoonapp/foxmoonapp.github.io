@@ -11,16 +11,17 @@
   </head>
   <body>
     <h1 class="title">Compiler Playground</h1>
+    <input type='checkbox' id='chkDetailView' class="title">detail view</input>
     <div class="codebox">
       <div class="code">
         <div class="code-box-title">CONFIG</div>
         <textarea id="yaml" class="code-input"></textarea>
       </div>
-      <div class="code">
+      <div class="code" id='parserCodeBox'>
         <div class="code-box-title">PARSER</div>
         <textarea id="parser" class="code-input" disabled></textarea>
       </div>
-      <div class="code">
+      <div class="code" id='transfomerCodeBox'>
         <div class="code-box-title">TRANSFORMER</div>
         <textarea id="transformer" class="code-input" disabled></textarea>
       </div>
