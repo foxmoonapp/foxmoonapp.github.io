@@ -51,16 +51,29 @@ function lexerInputTextChange(event) {
 
 async function update(yaml) {
   try {
-    const lexerComponent = await compiler.Lexer.yamlLexer(yaml);
-    const parsedComponent = await compiler.Parser.parser(lexerComponent);
-    parserInput.textContent = JSON.stringify(parsedComponent, null, ' ');
+    const lexerComponents = await compiler.Lexer.yamlLexer(yaml);
 
-    const transfomedComponent = await compiler.Transformer.transform(parsedComponent);
-    transformerInput.textContent = JSON.stringify(transfomedComponent, null, ' ');
+    const parsedComponentsPromise = lexerComponents.map(
+      lc => compiler.Parser.parser(lc)
+    );
+    const parsedComponents = await Promise.all(parsedComponentsPromise);
 
-    const generatedCode = await compiler.CodeGenerator.codeGenerator(transfomedComponent);
-    codeGeneratorInput.textContent = generatedCode;
+    parserInput.textContent = JSON.stringify(parsedComponents, null, ' ');
+
+    const transfomerComponentsPromise = parsedComponents.map(
+      pc => compiler.Transformer.transform(pc)
+    );
+
+    const transfomedComponents = await Promise.all(transfomerComponentsPromise);
+    transformerInput.textContent = JSON.stringify(transfomedComponents, null, ' ');
+
+    const codePromise = transfomedComponents.map(
+      tc => compiler.CodeGenerator.codeGenerator(tc)
+    );
+    const generatedCodeFiles = await Promise.all(codePromise);
+    codeGeneratorInput.textContent = generatedCodeFiles.join('\n\n');
   } catch (e) {
+    console.error(e);
     const errStr = `- ${JSON.stringify(e)} `;
     codeGeneratorInput.textContent = `invalid input ${errStr === '- {} ' ? '' : errStr}...`;
   }
