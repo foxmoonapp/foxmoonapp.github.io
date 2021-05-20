@@ -1,82 +1,79 @@
 let yamlInput;
-let parserInput;
-let transformerInput;
-let codeGeneratorInput;
+let intermediateLanguage;
+let transformedBlockFiles;
+let generatedCode;
 let chkDetailView;
-let parserCodeBox;
-let transfomerCodeBox;
+let intermediateLanguageCodeBox;
+let transfomedLanguageCodeBox;
 
 const init = async () => {
-  const initialCode = `kind: component
-name: hello
+  const initialCode = `
+kind: ui
+name: Page
 spec:
-  props:
-    - name
-  render:
-    layout: flex-column
-    elements:
-      - type: static-text
-        value: hello
-      - type: prop
-        value: name`;
+  view:
+    container:
+      layout: flex_column
+      children:
+        - label:
+            value:
+              static: this is Page block!
+        - block:
+            name: Header
+---
+kind: ui
+name: Header
+spec:
+  view:
+    label:
+      value:
+        static: this is Header block!
+`;
 
   yamlInput = document.querySelector('#yaml');
-  parserInput = document.querySelector('#parser');
-  transformerInput = document.querySelector('#transformer');
-  codeGeneratorInput = document.querySelector('#codeGenerator');
+  intermediateLanguage = document.querySelector('#intermediateLanguage');
+  transformedBlockFiles = document.querySelector('#transformedBlockFiles');
+  generatedCode = document.querySelector('#generatedCode');
   chkDetailView = document.querySelector('#chkDetailView');
-  parserCodeBox = document.querySelector('#parserCodeBox');
-  transfomerCodeBox = document.querySelector('#transfomerCodeBox');
+  intermediateLanguageCodeBox = document.querySelector('#intermediateLanguageCodeBox');
+  transfomedLanguageCodeBox = document.querySelector('#transfomedLanguageCodeBox');
 
-  parserCodeBox.style.display = 'none';
-  transfomerCodeBox.style.display = 'none';
+  intermediateLanguageCodeBox.style.display = 'none';
+  transfomedLanguageCodeBox.style.display = 'none';
   chkDetailView.addEventListener('change', (event) => {
     if (event.currentTarget.checked) {
-      parserCodeBox.style.display = 'flex';
-      transfomerCodeBox.style.display = 'flex';
+      intermediateLanguageCodeBox.style.display = 'flex';
+      transfomedLanguageCodeBox.style.display = 'flex';
     } else {
-      parserCodeBox.style.display = 'none';
-      transfomerCodeBox.style.display = 'none';
+      intermediateLanguageCodeBox.style.display = 'none';
+      transfomedLanguageCodeBox.style.display = 'none';
     }
   });
 
-  yamlInput.addEventListener("input", (event) => lexerInputTextChange(event));
+  yamlInput.addEventListener("input", (event) => yamlInputChanged(event));
   yamlInput.value = initialCode;
   update(initialCode);
 };
 
-function lexerInputTextChange(event) {
+function yamlInputChanged(event) {
   update(event.currentTarget.value);
 }
 
 async function update(yaml) {
-  try {
-    const lexerComponents = await compiler.Lexer.yamlLexer(yaml);
 
-    const parsedComponentsPromise = lexerComponents.map(
-      lc => compiler.Parser.parser(lc)
-    );
-    const parsedComponents = await Promise.all(parsedComponentsPromise);
-
-    parserInput.textContent = JSON.stringify(parsedComponents, null, ' ');
-
-    const transfomerComponentsPromise = parsedComponents.map(
-      pc => compiler.Transformer.transform(pc)
-    );
-
-    const transfomedComponents = await Promise.all(transfomerComponentsPromise);
-    transformerInput.textContent = JSON.stringify(transfomedComponents, null, ' ');
-
-    const codePromise = transfomedComponents.map(
-      tc => compiler.CodeGenerator.codeGenerator(tc)
-    );
-    const generatedCodeFiles = await Promise.all(codePromise);
-    codeGeneratorInput.textContent = generatedCodeFiles.join('\n\n');
-  } catch (e) {
-    console.error(e);
-    const errStr = `- ${JSON.stringify(e)} `;
-    codeGeneratorInput.textContent = `invalid input ${errStr === '- {} ' ? '' : errStr}...`;
+  const compilerOutput = await compiler.compile(yaml);
+  if (compilerOutput.isErr()) {
+    console.error(compilerOutput.error);
+    generatedCode.textContent = compilerOutput.error;
+    return;
   }
+  const result = compilerOutput.value;
+  intermediateLanguage.textContent = JSON.stringify(result.intermediateLanguage, null, 2);
+  transformedBlockFiles.textContent = JSON.stringify(result.transformedBlockFiles, null, 2);
+  generatedCode.textContent = result.codeFiles
+    .map(codefile => `//  file : ${codefile.filename}\n\n${codefile.body}\n`)
+    .join('\n');
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {

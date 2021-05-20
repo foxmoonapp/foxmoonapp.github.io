@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Static Template</title>
+    <title>Foxmoon Compiler Playground</title>
     <link rel="stylesheet" href="/assets/css/styles.css" />
-    <script src="https://unpkg.com/foxmoon-compiler@0.0.7/lib/index.min.js"></script>
+    <script src="https://unpkg.com/foxmoon-compiler@0.1.2/lib/index.min.js"></script>
     <script src="/assets/js/app.js"></script>
   </head>
   <body>
@@ -14,20 +14,20 @@
     <input type='checkbox' id='chkDetailView' class="title">detail view</input>
     <div class="codebox">
       <div class="code">
-        <div class="code-box-title">CONFIG</div>
+        <div class="code-box-title">INPUT</div>
         <textarea id="yaml" class="code-input"></textarea>
       </div>
-      <div class="code" id='parserCodeBox'>
-        <div class="code-box-title">PARSER</div>
-        <textarea id="parser" class="code-input" disabled></textarea>
+      <div class="code" id='intermediateLanguageCodeBox'>
+        <div class="code-box-title">INTERMEDIATE LANGUAGE</div>
+        <textarea id="intermediateLanguage" class="code-input" disabled></textarea>
       </div>
-      <div class="code" id='transfomerCodeBox'>
-        <div class="code-box-title">TRANSFORMER</div>
-        <textarea id="transformer" class="code-input" disabled></textarea>
+      <div class="code" id='transfomedLanguageCodeBox'>
+        <div class="code-box-title">TRANSFORMED IL</div>
+        <textarea id="transformedBlockFiles" class="code-input" disabled></textarea>
       </div>
       <div class="code">
-        <div class="code-box-title">REACT CODE</div>
-        <textarea id="codeGenerator" class="code-input" disabled></textarea>
+        <div class="code-box-title">CODE</div>
+        <textarea id="generatedCode" class="code-input" disabled></textarea>
       </div>
     </div>
   </body>
