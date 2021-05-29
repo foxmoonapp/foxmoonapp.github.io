@@ -17,6 +17,11 @@ body {
   color: var(--fourth);
   padding: 10px;
   margin-left: 10px;
+}
+
+.link {
+  color: var(--third);
+  padding: 10px;
   margin-left: 10px;
 }
 
